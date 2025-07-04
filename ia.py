@@ -66,8 +66,7 @@ def model_loading(model_name, quantization_config=None):
         print("Error al cargar el modelo:", e)
         return None
 
-def model_ussage(message):
-    logging()
+def model_ussage(message, lang):
     tokenizer = tokenization()
     quantization = quantization_configuration()
     model = model_loading(model_name, quantization_config=quantization)
@@ -77,7 +76,7 @@ def model_ussage(message):
 
     messages = [
         {"role": "system", "content": SYSTEM_PROMPT},
-        {"role": "user", "content": message}
+        {"role": "user", "content": f"Este código está en python, genera un equivalente en {lang}:\n\n{message}"}
     ]
     inputs = tokenizer.apply_chat_template(messages, return_tensors="pt").to("cuda")
     outputs = model.generate(inputs, max_new_tokens=2000, pad_token_id=tokenizer.eos_token_id)
